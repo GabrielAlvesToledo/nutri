@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    
+  </head>
+  
+  <body>
+    <div class="container bg-dark">
+        <hr>
+        <h4 class="display-4 text-white">Calculadora de Nutrientes</h4>
+        <br>
+    </div>
+
+    <div class="container" id="quantidade">   
+    </div>
+    <br>
+    <div class="container" id="item">
+    
+    </div>
+    <div class="container" id="tabela">
+
+    </div>
+    <div class="container" id="botao">
+
+    </div>
+    <div class="container" id="resultado">
+        <br><br><br>
+        <h4>
+            Quantidade em nutrientes
+        </h4>
+        <br>
+        <p>Você ainda não consumiu nenhum nutriente, selecione um alimento para começar a somar.</p>
+        <br><br><br>
+    </div>
+    <div class="container" id="system">
+        <hr>
+        <br>
+        <br>
+        <p class="lead">Selecione um alimento:</p>
+        <select id="alimento" oninput="pãoIntegral.Show(value), pãoIntegral.Quantidade();">
+            <optgroup id="optionId">
+                <option value="">Escolha um alimento</option>
+            </optgroup>
+        </select>
+    </div>
+</body>
+
+<script>
+
+    //nutrientes
+    let cal = 0;
+    let carbo = 0;
+    let gordurasTotais = 0;
+    let proteina = 0;
+
+    //divs
+    let item = window.document.getElementById("item");
+    let quantidade = window.document.getElementById("quantidade");
+    let tabela = window.document.getElementById("tabela");
+    let botao = window.document.getElementById("botao");
+    let resultado = window.document.getElementById("resultado");
+
+    //classes
+
+    class Alimento{
+        constructor(nome, calorias, proteinas, gorduras, carboidratos, grama, unidade){
+            this.nome = nome;
+            this.calorias = calorias;
+            this.proteinas = proteinas;
+            this.gorduras = gorduras;
+            this.carboidratos = carboidratos;
+            this.grama = false;
+            this.unidade = false;
+            this.quantidade = 0;
+        }     
+        Show(name){
+            resultado.innerHTML = "";
+            item.innerHTML = "";
+            quantidade.innerHTML = "";
+            const card = window.document.createElement("div");
+            card.className = "card text-center";
+            const cardHead = window.document.createElement("div");
+            cardHead.className = "card-head";
+            const h4 = window.document.createElement("h4");
+            const h4text = window.document.createTextNode(name);
+            h4.appendChild(h4text);
+            cardHead.appendChild(h4);
+            const cardBody = window.document.createElement("div");
+            cardBody.className = "card-body";
+            const img = window.document.createElement("img");
+            img.setAttribute("src", `/img/${name}.png`);
+            cardBody.appendChild(img);
+            card.appendChild(cardHead);
+            card.appendChild(cardBody);
+            item.appendChild(card);
+        }
+        
+        Quantidade(){
+            const hr = window.document.createElement("hr");
+            quantidade.appendChild(hr);
+            const p = window.document.createElement("p");
+            const pTxt = window.document.createTextNode("Qual a quantidade em gramas?");
+            p.appendChild(pTxt);
+            quantidade.appendChild(p);
+            const input = window.document.createElement("input");
+            input.setAttribute("type", "text");
+            input.id = "qtd";
+            input.className = "form-control"
+            input.setAttribute("style","width: 6rem;");
+            const btn = window.document.createElement("button");
+            btn.className = "btn btn-dark"
+            btn.innerHTML = "Calcular";
+            btn.setAttribute("style", "margin-top: 1rem;")
+            btn.setAttribute("onclick", `pãoIntegral.Tabela(), pãoIntegral.Botao();`)
+            quantidade.appendChild(input);
+            quantidade.appendChild(btn);
+        }
+        
+        Tabela(){
+            const valor = window.document.getElementById("qtd").value;
+            const alimento = window.document.getElementById("alimento").value;
+            if (alimento == "Pão Integral und"){
+                tabela.innerHTML = "";
+                const table = window.document.createElement("table");
+                table.className = "table table-bordered";
+                const thead = window.document.createElement("thead");
+                const tbody = window.document.createElement("tbody");
+                const th0 = window.document.createElement("th");
+                const th1 = window.document.createElement("th");
+                const th2 = window.document.createElement("th");
+                const th3 = window.document.createElement("th");
+                const th0text = window.document.createTextNode(`Calorias`);
+                const th1text = window.document.createTextNode(`Proteinas`);
+                const th2text = window.document.createTextNode(`Gorduras Totais`);
+                const th3text = window.document.createTextNode(`Carboidratos`);
+                th0.appendChild(th0text);
+                th1.appendChild(th1text);
+                th2.appendChild(th2text);
+                th3.appendChild(th3text);
+                thead.appendChild(th0);
+                thead.appendChild(th1);
+                thead.appendChild(th2);
+                thead.appendChild(th3);
+                const td0 = window.document.createElement("td");
+                const td1 = window.document.createElement("td");
+                const td2 = window.document.createElement("td");
+                const td3 = window.document.createElement("td");
+                var caloriaDinamic = pãoIntegral.calorias * valor;
+                var proteinaDinamic = pãoIntegral.proteinas * valor;
+                var gorduraDinamic = pãoIntegral.gorduras * valor;
+                var carboDinamic = pãoIntegral.carboidratos * valor;
+                const td0text = window.document.createTextNode(caloriaDinamic);
+                const td1text = window.document.createTextNode(proteinaDinamic);
+                const td2text = window.document.createTextNode(gorduraDinamic);
+                const td3text = window.document.createTextNode(carboDinamic);
+                td0.appendChild(td0text);
+                td1.appendChild(td1text);
+                td2.appendChild(td2text);
+                td3.appendChild(td3text);
+                tbody.appendChild(td0);
+                tbody.appendChild(td1);
+                tbody.appendChild(td2);
+                tbody.appendChild(td3);
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                tabela.appendChild(table);
+            }
+            if (alimento == "Ovo Frito und"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = ovoFrito.calorias * valor;
+            var proteinaDinamic = ovoFrito.proteinas * valor;
+            var gorduraDinamic = ovoFrito.gorduras * valor;
+            var carboDinamic = ovoFrito.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }
+            if (alimento == "Mandioca Cozida 100g"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = mandiocaCozida.calorias * valor;
+            var proteinaDinamic = mandiocaCozida.proteinas * valor;
+            var gorduraDinamic = mandiocaCozida.gorduras * valor;
+            var carboDinamic = mandiocaCozida.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }
+            if (alimento == "Batata Doce Cozida 100g"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = batataDoce.calorias * valor;
+            var proteinaDinamic = batataDoce.proteinas * valor;
+            var gorduraDinamic = batataDoce.gorduras * valor;
+            var carboDinamic = batataDoce.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }
+            if (alimento == "Feijão 100g"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = feijão.calorias * valor;
+            var proteinaDinamic = feijão.proteinas * valor;
+            var gorduraDinamic = feijão.gorduras * valor;
+            var carboDinamic = feijão.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }  
+            if (alimento == "Peito de Frango 100g"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = peitoDeFrango.calorias * valor;
+            var proteinaDinamic = peitoDeFrango.proteinas * valor;
+            var gorduraDinamic = peitoDeFrango.gorduras * valor;
+            var carboDinamic = peitoDeFrango.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }  
+            if (alimento == "Iogurte und"){
+                const tela = window.document.getElementById("tabela");
+            tela.innerHTML = "";
+            const table = window.document.createElement("table");
+            table.className = "table table-bordered";
+            const thead = window.document.createElement("thead");
+            const tbody = window.document.createElement("tbody");
+            const th0 = window.document.createElement("th");
+            const th1 = window.document.createElement("th");
+            const th2 = window.document.createElement("th");
+            const th3 = window.document.createElement("th");
+            const th0text = window.document.createTextNode(`Calorias`);
+            const th1text = window.document.createTextNode(`Proteinas`);
+            const th2text = window.document.createTextNode(`Gorduras Totais`);
+            const th3text = window.document.createTextNode(`Carboidratos`);
+            th0.appendChild(th0text);
+            th1.appendChild(th1text);
+            th2.appendChild(th2text);
+            th3.appendChild(th3text);
+            thead.appendChild(th0);
+            thead.appendChild(th1);
+            thead.appendChild(th2);
+            thead.appendChild(th3);
+            const td0 = window.document.createElement("td");
+            const td1 = window.document.createElement("td");
+            const td2 = window.document.createElement("td");
+            const td3 = window.document.createElement("td");
+            var caloriaDinamic = iogurte.calorias * valor;
+            var proteinaDinamic = iogurte.proteinas * valor;
+            var gorduraDinamic = iogurte.gorduras * valor;
+            var carboDinamic = iogurte.carboidratos * valor;
+            const td0text = window.document.createTextNode(caloriaDinamic);
+            const td1text = window.document.createTextNode(proteinaDinamic);
+            const td2text = window.document.createTextNode(gorduraDinamic);
+            const td3text = window.document.createTextNode(carboDinamic);
+            td0.appendChild(td0text);
+            td1.appendChild(td1text);
+            td2.appendChild(td2text);
+            td3.appendChild(td3text);
+            tbody.appendChild(td0);
+            tbody.appendChild(td1);
+            tbody.appendChild(td2);
+            tbody.appendChild(td3);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+            tela.appendChild(table);
+            }       
+        }
+        
+        Botao(){
+            var quantidade = window.document.getElementById("qtd").value;
+            const botao = window.document.getElementById("botao");
+            botao.innerHTML = '';
+            const br = window.document.createElement("br");
+            botao.appendChild(br);
+            const p = window.document.createElement("p");
+            const pTxt = window.document.createTextNode("Clique em 'Confirmar' para somar o alimento selecionado.")
+            p.appendChild(pTxt);
+            botao.appendChild(p);
+            const hr = window.document.createElement("hr");
+            botao.appendChild(hr);
+            const button = window.document.createElement("button");
+            button.className = "btn btn-dark";
+            button.value = quantidade;
+            button.setAttribute("onclick", "pãoIntegral.Soma();")
+            const textButton = window.document.createTextNode("Confirmar");
+            button.appendChild(textButton);
+            botao.appendChild(button);
+            const hr2 = window.document.createElement("hr");
+            botao.appendChild(hr2);
+        }
+
+        Soma(){
+            item.innerHTML = "";
+            tabela.innerHTML = "";
+            botao.innerHTML = "";
+            const valor = window.document.getElementById("qtd").value;
+            quantidade.innerHTML = "";
+            const alimento = window.document.getElementById("alimento").value;
+            if (alimento == "Pão Integral und"){
+                selecionados.push({
+                    nome: pãoIntegral.nome,
+                    calorias: pãoIntegral.calorias,
+                    proteinas: pãoIntegral.proteinas,
+                    gordurasTotais: pãoIntegral.gordurasTotais,
+                    carboidratos: pãoIntegral.carboidratos
+                });
+                cal = cal + valor * pãoIntegral.calorias;
+                proteina = proteina + valor * pãoIntegral.proteinas;
+                gordurasTotais = gordurasTotais + valor * pãoIntegral.gorduras;
+                carbo = carbo + valor * pãoIntegral.carboidratos;  
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                resultado.appendChild(div);
+                var p2 = window.document.createElement("p");
+                pãoIntegral.Adicionados();
+                
+                
+            }
+            if (alimento == "Ovo Frito und"){
+                selecionados.push({
+                    nome: ovoFrito.nome,
+                    calorias: ovoFrito.calorias,
+                    proteinas: ovoFrito.proteinas,
+                    gordurasTotais: ovoFrito.gordurasTotais,
+                    carboidratos: ovoFrito.carboidratos
+                });
+                cal = cal + valor * ovoFrito.calorias;
+                proteina = proteina + valor * ovoFrito.proteinas;
+                gordurasTotais = gordurasTotais + valor * ovoFrito.gorduras;
+                carbo = carbo + valor * ovoFrito.carboidratos;  
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos.`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                resultado.appendChild(div);
+                var p2 = window.document.createElement("p");
+                for (var c=0;c < selecionados.length;c++) {
+                        const card = window.document.createElement("div");
+                        card.setAttribute("style","width: 20rem;")
+                        card.className = "card text-center";
+                        const cardHead = window.document.createElement("div");
+                        cardHead.className = "card-head";
+                        const h4 = window.document.createElement("h4");
+                        const h4text = window.document.createTextNode(selecionados[c].nome);
+                        h4.appendChild(h4text);
+                        cardHead.appendChild(h4);
+                        const cardBody = window.document.createElement("div");
+                        cardBody.className = "card-body";
+                        const img = window.document.createElement("img");
+                        img.setAttribute("src", `/img/${selecionados[c].nome}.png`);
+                        cardBody.appendChild(img);
+                        card.appendChild(cardHead);
+                        card.appendChild(cardBody);
+                        item.appendChild(card);
+                }
+            }
+            if (alimento == "Mandioca Cozida"){
+                selecionados.push({mandiocaCozida: {
+                    nome: mandiocaCozida.nome,
+                    calorias: mandiocaCozida.calorias,
+                    proteinas: mandiocaCozida.proteinas,
+                    gordurasTotais: mandiocaCozida.gordurasTotais,
+                    carboidratos: mandiocaCozida.carboidratos
+                }});
+                cal = cal + valor * mandiocaCozida.calorias;
+                proteina = proteina + valor * mandiocaCozida.proteinas;
+                gordurasTotais = gordurasTotais + valor * mandiocaCozida.gorduras;
+                carbo = carbo + valor * mandiocaCozida.carboidratos;  
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                resultado.appendChild(div);
+                var p2 = window.document.createElement("p");
+                for (var c=0;c < selecionados.length;c++) {
+                        const card = window.document.createElement("div");
+                        card.setAttribute("style","width: 20rem;")
+                        card.className = "card text-center";
+                        const cardHead = window.document.createElement("div");
+                        cardHead.className = "card-head";
+                        const h4 = window.document.createElement("h4");
+                        const h4text = window.document.createTextNode(selecionados[c].mandiocaCozida.nome);
+                        h4.appendChild(h4text);
+                        cardHead.appendChild(h4);
+                        const cardBody = window.document.createElement("div");
+                        cardBody.className = "card-body";
+                        const img = window.document.createElement("img");
+                        img.setAttribute("src", `/img/${selecionados[c].mandiocaCozida.nome}.png`);
+                        cardBody.appendChild(img);
+                        card.appendChild(cardHead);
+                        card.appendChild(cardBody);
+                        item.appendChild(card);
+                }    
+            }
+            if (alimento == "Batata Doce Cozida 100g"){
+                cal = cal + qtd * batataDoce.calorias;
+                proteina = proteina + qtd * batataDoce.proteinas;
+                gordurasTotais = gordurasTotais + qtd * batataDoce.gorduras;
+                carbo = carbo + qtd * batataDoce.carboidratos;   
+                var localItem = window.document.getElementById("item");
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                localItem.appendChild(div);
+                }
+            if (alimento == "Feijão 100g"){
+                cal = cal + qtd * feijão.calorias;
+                proteina = proteina + qtd * feijão.proteinas;
+                gordurasTotais = gordurasTotais + qtd * feijão.gorduras;
+                carbo = carbo + qtd * feijão.carboidratos;    
+                var localItem = window.document.getElementById("item");
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                localItem.appendChild(div);
+                }
+            if (alimento == "Peito de Frango 100g"){
+                cal = cal + qtd * peitoDeFrango.calorias;
+                proteina = proteina + qtd * peitoDeFrango.proteinas;
+                gordurasTotais = gordurasTotais + qtd * peitoDeFrango.gorduras;
+                carbo = carbo + qtd * peitoDeFrango.carboidratos;
+                var localItem = window.document.getElementById("item");
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                localItem.appendChild(div);
+                }
+            if (alimento == "Iogurte und"){
+                cal = cal + qtd * iogurte.calorias;
+                proteina = proteina + qtd * iogurte.proteinas;
+                gordurasTotais = gordurasTotais + qtd * iogurte.gorduras;
+                carbo = carbo + qtd * iogurte.carboidratos;
+                var localItem = window.document.getElementById("item");
+                var div = window.document.createElement("div");
+                div.className = "container";
+                var hr = window.document.createElement("hr");
+                div.appendChild(hr);
+                var h4 = window.document.createElement("h4");
+                var h4text = window.document.createTextNode(`Resultado Total:`);
+                h4.appendChild(h4text);
+                div.append(h4)
+                var p = window.document.createElement("p");
+                var ptext = window.document.createTextNode(`Você consumiu: ${cal} calorias, ${proteina}g proteinas, ${gordurasTotais}g gorduras totais e ${carbo}g carboidratos`);
+                p.appendChild(ptext);
+                p.className = "lead";
+                div.appendChild(p);
+                localItem.appendChild(div);
+                }
+        }  
+        
+        Adicionados(){
+            for (var c=0;c < selecionados.length;c++) {
+                        const hr = window.document.createElement("hr");
+                        item.appendChild(hr);
+                        const h2 = window.document.createElement("h2");
+                        h2.innerHTML = "Alimentos Selecionados";
+                        h2.className = "text-center";
+                        item.appendChild(h2);
+                        const hr2 = window.document.createElement("hr");
+                        item.appendChild(hr2);
+                        const br2 = window.document.createElement("br");
+                        item.appendChild(br2);
+                        const card = window.document.createElement("div");
+                        card.setAttribute("style","width: 20rem;")
+                        card.className = "card text-center";
+                        const cardHead = window.document.createElement("div");
+                        cardHead.className = "card-head";
+                        const h4 = window.document.createElement("h4");
+                        const h4text = window.document.createTextNode(selecionados[c].nome);
+                        h4.appendChild(h4text);
+                        cardHead.appendChild(h4);
+                        const cardBody = window.document.createElement("div");
+                        cardBody.className = "card-body";
+                        const img = window.document.createElement("img");
+                        img.setAttribute("src", `/img/${selecionados[c].nome}.png`);
+                        const p = window.document.createElement("p");
+                        p.innerHTML = `Esse item te adicionou:
+                        Calorias: ${selecionados[c].calorias}.
+                        Proteinas: ${selecionados[c].proteina}g.
+                        Gorduras Totais: ${selecionados[c].gordurasTotais}g.
+                        Carboidratos: ${selecionados[c].carbo}.`
+                        cardBody.appendChild(p);
+                        cardBody.appendChild(img);
+                        card.appendChild(cardHead);
+                        card.appendChild(cardBody);
+                        item.appendChild(card);
+                }
+        }
+    }
+    
+    //objetos
+    let pãoIntegral = new Alimento("Pão Integral und", 60, 2, 1, 11, 0);
+    let ovoFrito = new Alimento("Ovo Frito und", 120, 7.80, 9.30, 0.60, 1);
+    let mandiocaCozida = new Alimento("Mandioca Cozida", 125, 0.60, 0.30, 28, 2);
+    let batataDoce = new Alimento("Batata Doce Cozida 100g", 77, 0.60, 0.10, 18.40, 3);
+    let feijão = new Alimento("Feijão 100g", 69.10, 4.40, 0.30, 12.20, 4);
+    let peitoDeFrango = new Alimento("Peito de Frango 100g", 163, 31.50, 3.20, 0, 5);
+    let iogurte = new Alimento("Iogurte und", 58, 1.2, 1, 11, 6);
+    
+    let all = [pãoIntegral, ovoFrito, mandiocaCozida, batataDoce, feijão, peitoDeFrango, iogurte];
+
+    let selecionados = [];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var optiongroup = window.document.getElementById("optionId");
+       for (var c=0;c < all.length;c++) {
+            var option = window.document.createElement("option");
+            option.value = all[c].nome;
+            option.innerHTML = all[c].nome;
+            optiongroup.appendChild(option);
+        } 
+    });
+
+    
+</script>
+</html>
